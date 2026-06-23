@@ -83,34 +83,35 @@
             });
         });
     </script>
-<script>
-document.querySelectorAll('.delete-comment').forEach(button => {
+    <script>
+        document.querySelectorAll('.delete-comment').forEach(button => {
 
-    button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
 
-        const commentId = this.dataset.commentId;
+                const commentId = this.dataset.commentId;
 
-        fetch(`/comments/${commentId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(() => {
-            location.reload();
+                fetch(`/comments/${commentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(() => {
+                        location.reload();
+                    });
+            });
+
         });
-    });
-
-});
-</script>
+    </script>
 
     <script>
         document.getElementById('comment-form').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const formData = new FormData(this);
+            const form = this;
+            const formData = new FormData(form);
 
             fetch('/issues/{{ $issue->id }}/comments', {
                 method: 'POST',
@@ -121,8 +122,28 @@ document.querySelectorAll('.delete-comment').forEach(button => {
                 body: formData
             })
                 .then(response => response.json())
-                .then(() => {
-                    location.reload();
+                .then(data => {
+                    const commentsList = document.getElementById('comments-list');
+
+                    const commentBox = document.createElement('div');
+                    commentBox.style.border = '1px solid #ccc';
+                    commentBox.style.padding = '10px';
+                    commentBox.style.marginBottom = '10px';
+
+                    commentBox.innerHTML = `
+                <strong>${data.comment.author_name}</strong>
+                <p>${data.comment.body}</p>
+                <button
+                    class="delete-comment"
+                    data-comment-id="${data.comment.id}"
+                >
+                    Delete
+                </button>
+            `;
+
+                    commentsList.prepend(commentBox);
+
+                    form.reset();
                 });
         });
     </script>
