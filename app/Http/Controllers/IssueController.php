@@ -57,7 +57,11 @@ class IssueController extends Controller
 
     public function show(Issue $issue)
     {
-        return view('issues.show', compact('issue'));
+        $issue->load(['project', 'tags']);
+
+        $tags = Tag::all();
+
+        return view('issues.show', compact('issue', 'tags'));
     }
 
     public function edit(Issue $issue)
@@ -86,5 +90,24 @@ class IssueController extends Controller
 
         return redirect()->route('issues.index')
             ->with('success', 'Issue deleted successfully.');
+    }
+
+
+    public function attachTag(Issue $issue, Tag $tag)
+    {
+        $issue->tags()->syncWithoutDetaching([$tag->id]);
+
+        return response()->json([
+            'message' => 'Tag attached successfully.',
+        ]);
+    }
+
+    public function detachTag(Issue $issue, Tag $tag)
+    {
+        $issue->tags()->detach($tag->id);
+
+        return response()->json([
+            'message' => 'Tag detached successfully.',
+        ]);
     }
 }
