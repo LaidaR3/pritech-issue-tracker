@@ -6,14 +6,32 @@ use App\Http\Requests\StoreIssueRequest;
 use App\Http\Requests\UpdateIssueRequest;
 use App\Models\Issue;
 use App\Models\Project;
+use App\Models\Tag;
 
 class IssueController extends Controller
 {
     public function index()
     {
-        $issues = Issue::with('project')->latest()->get();
+        $query = Issue::with(['project', 'tags']);
 
-        return view('issues.index', compact('issues'));
+        if (request('status')) {
+            $query->where('status', request('status'));
+        }
+
+        if (request('priority')) {
+            $query->where('priority', request('priority'));
+        }
+
+        if (request('tag_id')) {
+            $query->whereHas('tags', function ($q) {
+                $q->where('tags.id', request('tag_id'));
+            });
+        }
+
+        $issues = $query->latest()->get();
+        $tags = Tag::all();
+
+        return view('issues.index', compact('issues', 'tags'));
     }
 
     public function create()

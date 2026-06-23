@@ -7,6 +7,35 @@
 
 <br><br>
 
+<form method="GET" action="{{ route('issues.index') }}">
+    <select name="status">
+        <option value="">All Statuses</option>
+        <option value="open" @selected(request('status') == 'open')>Open</option>
+        <option value="in_progress" @selected(request('status') == 'in_progress')>In Progress</option>
+        <option value="closed" @selected(request('status') == 'closed')>Closed</option>
+    </select>
+
+    <select name="priority">
+        <option value="">All Priorities</option>
+        <option value="low" @selected(request('priority') == 'low')>Low</option>
+        <option value="medium" @selected(request('priority') == 'medium')>Medium</option>
+        <option value="high" @selected(request('priority') == 'high')>High</option>
+    </select>
+
+    <select name="tag_id">
+        <option value="">All Tags</option>
+        @foreach($tags as $tag)
+            <option value="{{ $tag->id }}" @selected(request('tag_id') == $tag->id)>
+                {{ $tag->name }}
+            </option>
+        @endforeach
+    </select>
+
+    <button type="submit">Filter</button>
+    <a href="{{ route('issues.index') }}">Clear</a>
+</form>
+
+<br>
 <table>
     <tr>
         <th>Title</th>
