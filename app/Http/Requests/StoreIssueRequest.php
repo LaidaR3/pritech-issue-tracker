@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreIssueRequest extends FormRequest
@@ -12,18 +11,21 @@ class StoreIssueRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            //
+            'project_id' => ['required', 'exists:projects,id'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'status' => ['required'],
+            'priority' => ['required'],
+            'due_date' => ['nullable', 'date'],
         ];
     }
 }
