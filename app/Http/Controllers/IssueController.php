@@ -8,6 +8,7 @@ use App\Models\Issue;
 use App\Models\Project;
 use App\Models\Tag;
 
+
 class IssueController extends Controller
 {
     public function index()
@@ -37,13 +38,18 @@ class IssueController extends Controller
     public function create()
     {
         $projects = Project::all();
+        $tags = Tag::all();
 
-        return view('issues.create', compact('projects'));
+        return view('issues.create', compact('projects', 'tags'));
     }
 
     public function store(StoreIssueRequest $request)
     {
-        Issue::create($request->validated());
+        $data = $request->validated();
+
+        $issue = Issue::create($data);
+
+        $issue->tags()->sync($data['tags'] ?? []);
 
         return redirect()->route('issues.index')
             ->with('success', 'Issue created successfully.');
@@ -57,13 +63,18 @@ class IssueController extends Controller
     public function edit(Issue $issue)
     {
         $projects = Project::all();
+        $tags = Tag::all();
 
-        return view('issues.edit', compact('issue', 'projects'));
+        return view('issues.edit', compact('issue', 'projects', 'tags'));
     }
 
     public function update(UpdateIssueRequest $request, Issue $issue)
     {
-        $issue->update($request->validated());
+        $data = $request->validated();
+
+        $issue->update($data);
+
+        $issue->tags()->sync($data['tags'] ?? []);
 
         return redirect()->route('issues.index')
             ->with('success', 'Issue updated successfully.');

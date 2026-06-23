@@ -2,10 +2,7 @@
 
 <select name="project_id">
     @foreach($projects as $project)
-        <option
-            value="{{ $project->id }}"
-            @selected(old('project_id', $issue->project_id ?? '') == $project->id)
-        >
+        <option value="{{ $project->id }}" @selected(old('project_id', $issue->project_id ?? '') == $project->id)>
             {{ $project->name }}
         </option>
     @endforeach
@@ -14,11 +11,7 @@
 <br><br>
 
 <label>Title</label><br>
-<input
-    type="text"
-    name="title"
-    value="{{ old('title', $issue->title ?? '') }}"
->
+<input type="text" name="title" value="{{ old('title', $issue->title ?? '') }}">
 
 <br><br>
 
@@ -47,11 +40,27 @@
 
 <br><br>
 
+<label>Tags</label><br>
+
+@foreach($tags as $tag)
+    <label>
+        <input
+            type="checkbox"
+            name="tags[]"
+            value="{{ $tag->id }}"
+            @checked(in_array(
+                $tag->id,
+                old('tags', isset($issue) ? $issue->tags->pluck('id')->toArray() : [])
+            ))
+        >
+        {{ $tag->name }}
+    </label>
+    <br>
+@endforeach
+
+<br>
+
 <label>Due Date</label><br>
-<input
-    type="date"
-    name="due_date"
-    value="{{ old('due_date', $issue->due_date ?? '') }}"
->
+<input type="date" name="due_date" value="{{ old('due_date', $issue->due_date ?? '') }}">
 
 <br><br>

@@ -24,6 +24,8 @@ class UpdateIssueRequest extends FormRequest
             'status' => ['required'],
             'priority' => ['required'],
             'due_date' => ['nullable', 'date'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['exists:tags,id'],
         ];
     }
 }
