@@ -13,11 +13,18 @@
 <label>Title</label><br>
 <input type="text" name="title" value="{{ old('title', $issue->title ?? '') }}">
 
+@error('title')
+    <p style="color:red">{{ $message }}</p>
+@enderror
+
 <br><br>
 
 <label>Description</label><br>
 <textarea name="description">{{ old('description', $issue->description ?? '') }}</textarea>
 
+@error('description')
+    <p style="color:red">{{ $message }}</p>
+@enderror
 <br><br>
 
 <label>Status</label><br>
@@ -62,5 +69,9 @@
 
 <label>Due Date</label><br>
 <input type="date" name="due_date" value="{{ old('due_date', $issue->due_date ?? '') }}">
+
+@error('due_date')
+    <p style="color:red">{{ $message }}</p>
+@enderror
 
 <br><br>

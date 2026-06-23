@@ -57,7 +57,11 @@ class IssueController extends Controller
 
     public function show(Issue $issue)
     {
-        $issue->load(['project', 'tags']);
+        $issue->load([
+            'project',
+            'tags',
+            'comments'
+        ]);
 
         $tags = Tag::all();
 

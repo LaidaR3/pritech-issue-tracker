@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,3 +19,9 @@ Route::post('/issues/{issue}/tags/{tag}', [IssueController::class, 'attachTag'])
 
 Route::delete('/issues/{issue}/tags/{tag}', [IssueController::class, 'detachTag'])
     ->name('issues.tags.detach');
+
+Route::post('/issues/{issue}/comments', [CommentController::class, 'store'])
+    ->name('comments.store');
+
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
+    ->name('comments.destroy');
