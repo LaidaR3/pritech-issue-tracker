@@ -8,6 +8,8 @@ use App\Models\Project;
 
 class ProjectController extends Controller
 {
+
+    //display all projects
     public function index()
     {
         $projects = Project::latest()->get();
@@ -15,11 +17,15 @@ class ProjectController extends Controller
         return view('projects.index', compact('projects'));
     }
 
+
+    // show project creation form
     public function create()
     {
         return view('projects.create');
     }
 
+    
+     // Show project details
     public function store(StoreProjectRequest $request)
     {
         Project::create($request->validated());
@@ -40,6 +46,7 @@ class ProjectController extends Controller
         return view('projects.edit', compact('project'));
     }
 
+      // update an existing project
     public function update(UpdateProjectRequest $request, Project $project)
     {
         $project->update($request->validated());
@@ -48,6 +55,7 @@ class ProjectController extends Controller
             ->with('success', 'Project updated successfully.');
     }
 
+    // delete an existing project
     public function destroy(Project $project)
     {
         $project->delete();

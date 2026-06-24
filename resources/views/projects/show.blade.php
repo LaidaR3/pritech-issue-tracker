@@ -8,7 +8,9 @@
 <p>Start Date: {{ $project->start_date }}</p>
 <p>Deadline: {{ $project->deadline }}</p>
 
-<a href="{{ route('projects.index') }}">Back</a>
+<a href="{{ route('projects.index') }}" class="btn btn-light">
+    Back to Projects
+</a>
 
 <h3>Issues</h3>
 

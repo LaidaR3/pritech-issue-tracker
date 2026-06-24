@@ -15,17 +15,28 @@ class IssueController extends Controller
     {
         $query = Issue::with(['project', 'tags']);
 
+        // Filter by status
         if (request('status')) {
             $query->where('status', request('status'));
         }
 
+        // Filter by priority
         if (request('priority')) {
             $query->where('priority', request('priority'));
         }
 
+        // Filter issues by selected tag
         if (request('tag_id')) {
             $query->whereHas('tags', function ($q) {
                 $q->where('tags.id', request('tag_id'));
+            });
+        }
+
+        // Search by title or description
+        if (request('search')) {
+            $query->where(function ($q) {
+                $q->where('title', 'like', '%' . request('search') . '%')
+                    ->orWhere('description', 'like', '%' . request('search') . '%');
             });
         }
 
