@@ -9,7 +9,16 @@ class TagController extends Controller
 {
     public function index()
     {
-        $tags = Tag::latest()->get();
+        //search tags
+        $query = Tag::query();
+
+
+
+        if (request('search')) {
+            $query->where('name', 'like', '%' . request('search') . '%');
+        }
+
+        $tags = $query->latest()->get();
 
         return view('tags.index', compact('tags'));
     }

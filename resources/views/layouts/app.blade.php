@@ -141,7 +141,7 @@
         .btn-light {
             background: #e5e7eb;
             color: #111827;
-            padding: 6px 12px;
+            padding: 9px 14px;
             border-radius: 6px;
             text-decoration: none;
             font-size: 14px;
@@ -151,7 +151,7 @@
             background: #ef4444;
             color: white;
             border: none;
-            padding: 8px 14px;
+            padding: 9px 14px;
             border-radius: 8px;
             cursor: pointer;
             transition: 0.2s;
@@ -170,6 +170,7 @@
         .action-btn {
             min-width: auto;
             height: auto;
+            padding: 9px 14px;
         }
 
         .tag-grid {
@@ -195,6 +196,63 @@
             color: #1d4ed8;
         }
 
+        .tag-page {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+        }
+
+        .tag-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .tag-card form {
+            display: grid;
+            gap: 12px;
+        }
+
+        .tag-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .tag-search input {
+            max-width: none;
+        }
+
+        .tag-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .tag-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 12px 14px;
+            border-radius: 10px;
+        }
+
+        .tag-color {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
+        }
+
+        .color-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
         .comment-form {
             display: grid;
             gap: 12px;
@@ -215,7 +273,7 @@
             display: inline-block;
             background: #e5e7eb;
             color: #111827;
-            padding: 10px 16px;
+            padding: 9px 14px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 500;

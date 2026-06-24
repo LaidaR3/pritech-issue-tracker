@@ -2,15 +2,21 @@
 
 @section('content')
 
-<h2>Create Project</h2>
+    <h2>Create Project</h2>
 
-<form action="{{ route('projects.store') }}" method="POST">
-    @csrf
+    <form action="{{ route('projects.store') }}" method="POST">
+        @csrf
 
-    @include('projects.form')
+        @include('projects.form')
 
-    <button type="submit">Save</button>
-    <a href="{{ route('projects.index') }}">Back</a>
-</form>
+        
+        <button type="submit" class="btn">
+            Save Project
+        </button>
+
+        <a href="{{ route('projects.index') }}" class="btn btn-light">
+            Cancel
+        </a>
+    </form>
 
 @endsection

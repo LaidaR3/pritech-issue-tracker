@@ -12,7 +12,14 @@ class ProjectController extends Controller
     //display all projects
     public function index()
     {
-        $projects = Project::latest()->get();
+        $query = Project::query();
+
+        if (request('search')) {
+            $query->where('name', 'like', '%' . request('search') . '%')
+                ->orWhere('description', 'like', '%' . request('search') . '%');
+        }
+
+        $projects = $query->latest()->get();
 
         return view('projects.index', compact('projects'));
     }
@@ -24,8 +31,8 @@ class ProjectController extends Controller
         return view('projects.create');
     }
 
-    
-     // Show project details
+
+    // Show project details
     public function store(StoreProjectRequest $request)
     {
         Project::create($request->validated());
@@ -46,7 +53,7 @@ class ProjectController extends Controller
         return view('projects.edit', compact('project'));
     }
 
-      // update an existing project
+    // update an existing project
     public function update(UpdateProjectRequest $request, Project $project)
     {
         $project->update($request->validated());

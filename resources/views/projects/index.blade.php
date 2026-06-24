@@ -6,6 +6,19 @@
 
     <br><br>
 
+    <form method="GET" action="{{ route('projects.index') }}">
+        <input type="text" name="search" id="project-search" value="{{ request('search') }}"
+            placeholder="Search projects...">
+
+        <button type="submit">Search</button>
+
+        <a href="{{ route('projects.index') }}" class="btn btn-light">
+            Clear
+        </a>
+    </form>
+
+    <br><br>
+
     <table>
         <tr>
             <th>Name</th>

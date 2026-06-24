@@ -2,43 +2,66 @@
 
 @section('content')
 
-<a href="{{ route('projects.index') }}" class="btn">Projects</a>
-<a href="{{ route('issues.index') }}" class="btn">Issues</a>
+<div class="page-actions">
+    <a href="{{ route('projects.index') }}" class="btn">Projects</a>
+    <a href="{{ route('issues.index') }}" class="btn">Issues</a>
+</div>
 
-<h2>Tags</h2>
+<h2>Manage Tags</h2>
 
-<form action="{{ route('tags.store') }}" method="POST">
-    @csrf
+<div class="tag-page">
+    <div class="tag-card">
+        <h3>Create Tag</h3>
 
-    <label>Name</label><br>
-    <input type="text" name="name" value="{{ old('name') }}">
-    @error('name') <p class="error">{{ $message }}</p> @enderror
+        <form action="{{ route('tags.store') }}" method="POST">
+            @csrf
 
-    <br><br>
+            <label>Name</label>
+            <input type="text" name="name" value="{{ old('name') }}">
+            @error('name') <p class="error">{{ $message }}</p> @enderror
 
-    <label>Color</label><br>
-    <input type="text" name="color" value="{{ old('color') }}" placeholder="example: red or #ff0000">
-    @error('color') <p class="error">{{ $message }}</p> @enderror
+            <label>Color</label>
+            <input type="text" name="color" value="{{ old('color') }}" placeholder="#2563eb">
+            @error('color') <p class="error">{{ $message }}</p> @enderror
 
-    <br><br>
+            <button type="submit">Create Tag</button>
+        </form>
+    </div>
 
-    <button type="submit">Create Tag</button>
-</form>
+    <div class="tag-card">
+        <form method="GET" action="{{ route('tags.index') }}" class="tag-search">
+            <input type="text" name="search" id="tag-search" value="{{ request('search') }}" placeholder="Search tags...">
 
-<br>
+            <button type="submit">Search</button>
 
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Color</th>
-    </tr>
+            <a href="{{ route('tags.index') }}" class="btn btn-light">Clear</a>
+        </form>
 
-    @foreach($tags as $tag)
-        <tr>
-            <td>{{ $tag->name }}</td>
-            <td>{{ $tag->color }}</td>
-        </tr>
-    @endforeach
-</table>
+        <div class="tag-list">
+            @foreach($tags as $tag)
+                <div class="tag-row">
+                    <span>{{ $tag->name }}</span>
+
+                    <span class="tag-color">
+                        <span class="color-dot" style="background: {{ $tag->color }}"></span>
+                        {{ $tag->color }}
+                    </span>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+<script>
+let tagSearchTimer;
+
+document.getElementById('tag-search').addEventListener('input', function () {
+    clearTimeout(tagSearchTimer);
+
+    tagSearchTimer = setTimeout(() => {
+        this.form.submit();
+    }, 500);
+});
+</script>
 
 @endsection
