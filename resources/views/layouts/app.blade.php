@@ -29,16 +29,17 @@
         }
 
         .container {
-            max-width: 1150px;
+            max-width: 1200px;
             margin: 35px auto;
             padding: 0 20px;
         }
 
         .card {
             background: white;
-            padding: 28px;
+            padding: 24px;
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
         }
 
         .page-actions {
@@ -118,6 +119,14 @@
             font-size: 14px;
         }
 
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: flex-end;
+            white-space: nowrap;
+        }
+
 
         .actions form {
             margin: 0;
@@ -161,16 +170,12 @@
             background: #dc2626;
         }
 
-        .actions {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
+
 
         .action-btn {
             min-width: auto;
             height: auto;
-            padding: 9px 14px;
+            padding: 8px 12px;
         }
 
         .tag-grid {
@@ -350,6 +355,57 @@
         .muted {
             color: #6b7280;
             font-size: 13px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .issue-table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+
+
+        .issue-table .title-col {
+            width: 16%;
+        }
+
+        .issue-table .project-col {
+            width: 15%;
+        }
+
+        .issue-table .status-col {
+            width: 11%;
+        }
+
+        .issue-table .users-col {
+            width: 18%;
+        }
+
+        .issue-table .priority-col {
+            width: 9%;
+        }
+
+        .issue-table .date-col {
+            width: 12%;
+            white-space: nowrap;
+        }
+
+        .issue-table .actions-col {
+            width: 19%;
+        }
+
+        .user-badge {
+            display: inline-block;
+            background: #eef2ff;
+            color: #3730a3;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            margin: 2px;
         }
     </style>
 </head>
