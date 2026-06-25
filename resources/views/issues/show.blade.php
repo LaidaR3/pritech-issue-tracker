@@ -58,18 +58,7 @@
         <button type="submit">Add Comment</button>
     </form>
 
-    <div id="comments-list" class="comments-list">
-        @foreach($issue->comments as $comment)
-            <div class="comment-card">
-                <strong>{{ $comment->author_name }}</strong>
-                <p>{{ $comment->body }}</p>
-
-                <button class="btn-danger delete-comment" data-comment-id="${data.comment.id}">
-                    Delete
-                </button>
-            </div>
-        @endforeach
-    </div>
+    <div id="comments-list" class="comments-list"></div>
 
     <script>
         document.querySelectorAll('.tag-checkbox').forEach(function (checkbox) {
@@ -92,28 +81,23 @@
             });
         });
 
-        function attachDeleteEvents() {
-            document.querySelectorAll('.delete-comment').forEach(button => {
-                button.onclick = function () {
-                    const commentId = this.dataset.commentId;
-                    const commentCard = this.closest('.comment-card');
+        
 
-                    fetch(`/comments/${commentId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json'
-                        }
-                    })
-                        .then(response => response.json())
-                        .then(() => {
-                            commentCard.remove();
-                        });
-                };
-            });
+    
+
+        function loadComments(url = '/issues/{{ $issue->id }}/comments') {
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('comments-list').innerHTML = html;
+                });
         }
 
-        attachDeleteEvents();
+        loadComments();
 
         document.getElementById('comment-form').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -130,24 +114,34 @@
                 body: formData
             })
                 .then(response => response.json())
-                .then(data => {
-                    const commentsList = document.getElementById('comments-list');
-
-                    const commentBox = document.createElement('div');
-                    commentBox.className = 'comment-card';
-
-                    commentBox.innerHTML = `
-                                    <strong>${data.comment.author_name}</strong>
-                                    <p>${data.comment.body}</p>
-                                    <button class="btn danger delete-comment" data-comment-id="${data.comment.id}">
-                                        Delete
-                                    </button>
-                                `;
-
-                    commentsList.prepend(commentBox);
+                .then(() => {
                     form.reset();
-                    attachDeleteEvents();
+                    loadComments();
                 });
+        });
+
+        document.addEventListener('click', function (e) {
+
+            if (e.target.classList.contains('delete-comment')) {
+                const commentId = e.target.dataset.commentId;
+
+                fetch(`/comments/${commentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(() => {
+                        loadComments();
+                    });
+            }
+
+            if (e.target.matches('.pagination a')) {
+                e.preventDefault();
+                loadComments(e.target.href);
+            }
         });
     </script>
 

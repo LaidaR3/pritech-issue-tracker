@@ -8,6 +8,25 @@ use App\Models\Issue;
 
 class CommentController extends Controller
 {
+
+    // oad comments with pagination for AJAX.
+    // public function index(Issue $issue)
+    // {
+    //     $comments = $issue->comments()
+    //         ->latest()
+    //         ->paginate(5);
+
+    //     return response()->view('comments.list', compact('comments'));
+    // }
+public function index(Issue $issue)
+{
+    $comments = $issue->comments()
+        ->latest()
+        ->paginate(5);
+
+    return view('comments.list', compact('comments'));
+}
+    // add a comment
     public function store(StoreCommentRequest $request, Issue $issue)
     {
         $comment = $issue->comments()->create($request->validated());
@@ -17,6 +36,8 @@ class CommentController extends Controller
             'comment' => $comment,
         ]);
     }
+
+    //delete a comment
 
     public function destroy(Comment $comment)
     {
