@@ -407,6 +407,16 @@
             font-size: 12px;
             margin: 2px;
         }
+
+        #comment-errors {
+            color: #dc2626;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        #comment-errors div {
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 

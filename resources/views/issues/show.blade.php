@@ -48,14 +48,17 @@
 
     <h3>Comments</h3>
 
-    <form id="comment-form" class="comment-form">
+    <div id="comment-errors"></div>
+
+    <form id="comment-form" class="comment-form" method="POST" action="{{ route('comments.store', $issue) }}" novalidate>
         @csrf
+        <input type="text" name="author_name" placeholder="Your name">
+        <div id="author_name_error" class="error"></div>
 
-        <input type="text" name="author_name" placeholder="Your name" required>
+        <textarea name="body" placeholder="Write a comment..."></textarea>
+        <div id="body_error" class="error"></div>
 
-        <textarea name="body" placeholder="Write a comment..." required></textarea>
-
-        <button type="submit">Add Comment</button>
+        <button type="button" id="add-comment-btn">Add Comment</button>
     </form>
 
     <div id="comments-list" class="comments-list"></div>
@@ -71,8 +74,8 @@
                     method: isChecked ? 'POST' : 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                    },
+                        'Accept': 'application/json'
+                    }
                 })
                     .then(response => response.json())
                     .then(data => {
@@ -80,10 +83,6 @@
                     });
             });
         });
-
-        
-
-    
 
         function loadComments(url = '/issues/{{ $issue->id }}/comments') {
             fetch(url, {
@@ -99,13 +98,17 @@
 
         loadComments();
 
-        document.getElementById('comment-form').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const form = this;
+        document.getElementById('add-comment-btn').addEventListener('click', function () {
+            const form = document.getElementById('comment-form');
             const formData = new FormData(form);
+            const errorBox = document.getElementById('comment-errors');
 
-            fetch('/issues/{{ $issue->id }}/comments', {
+            // Clear previous validation errors
+            document.getElementById('author_name_error').innerHTML = '';
+            document.getElementById('body_error').innerHTML = '';
+            errorBox.innerHTML = '';
+
+            fetch(form.action, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -113,15 +116,32 @@
                 },
                 body: formData
             })
-                .then(response => response.json())
-                .then(() => {
+                .then(async response => {
+                    const data = await response.json();
+
+                    if (response.status === 422) {
+                        if (data.errors.author_name) {
+                            document.getElementById('author_name_error').innerHTML =
+                                data.errors.author_name[0];
+                        }
+
+                        if (data.errors.body) {
+                            document.getElementById('body_error').innerHTML =
+                                data.errors.body[0];
+                        }
+
+                        return;
+
+                        errorBox.innerHTML = errors;
+                        return;
+                    }
+
                     form.reset();
                     loadComments();
                 });
         });
 
         document.addEventListener('click', function (e) {
-
             if (e.target.classList.contains('delete-comment')) {
                 const commentId = e.target.dataset.commentId;
 
@@ -144,5 +164,4 @@
             }
         });
     </script>
-
 @endsection
