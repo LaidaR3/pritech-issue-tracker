@@ -47,23 +47,31 @@
 
 <br><br>
 
-<label>Tags</label><br>
+<label>Tags</label>
 
-@foreach($tags as $tag)
-    <label>
-        <input
-            type="checkbox"
-            name="tags[]"
-            value="{{ $tag->id }}"
-            @checked(in_array(
-                $tag->id,
-                old('tags', isset($issue) ? $issue->tags->pluck('id')->toArray() : [])
-            ))
-        >
-        {{ $tag->name }}
-    </label>
-    <br>
-@endforeach
+<div class="selection-grid">
+    @foreach($tags as $tag)
+        <label class="selection-item">
+            <input type="checkbox" name="tags[]" value="{{ $tag->id }}" @checked(in_array($tag->id, old('tags', isset($issue) ? $issue->tags->pluck('id')->toArray() : [])))>
+            <span>{{ $tag->name }}</span>
+        </label>
+    @endforeach
+</div>
+
+<br>
+
+<label>Assigned Users</label>
+
+<div class="selection-grid">
+    @foreach($users as $user)
+        <label class="selection-item">
+            <input type="checkbox" name="users[]" value="{{ $user->id }}" @checked(in_array($user->id, old('users', isset($issue) ? $issue->users->pluck('id')->toArray() : [])))>
+            <span>{{ $user->name }}</span>
+        </label>
+    @endforeach
+</div>
+
+<br>
 
 <br>
 

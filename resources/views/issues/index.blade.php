@@ -7,7 +7,7 @@
 
     <br><br>
 
-   <form method="GET" action="{{ route('issues.index') }}" class="filter-form">
+    <form method="GET" action="{{ route('issues.index') }}" class="filter-form">
         <select name="status">
             <option value="">All Statuses</option>
             <option value="open" @selected(request('status') == 'open')>Open</option>
@@ -39,46 +39,10 @@
     </form>
 
     <br>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Project</th>
-            <th>Status</th>
-            <th>Priority</th>
-            <th>Due Date</th>
-            <th>Actions</th>
-        </tr>
 
-        @foreach($issues as $issue)
-            <tr>
-                <td>{{ $issue->title }}</td>
-                <td>{{ $issue->project->name }}</td>
-                <td>{{ $issue->status }}</td>
-                <td>{{ $issue->priority }}</td>
-                <td>{{ $issue->due_date }}</td>
-                <td>
-                    <div class="actions">
-                        <a href="{{ route('issues.show', $issue) }}" class="btn-light action-btn">
-                            View
-                        </a>
-
-                        <a href="{{ route('issues.edit', $issue) }}" class="btn-light action-btn">
-                            Edit
-                        </a>
-
-                        <form action="{{ route('issues.destroy', $issue) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-
-                            <button type="submit" class="btn-danger action-btn">
-                                Delete
-                            </button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-        @endforeach
-    </table>
+    <div id="issues-table">
+        @include('issues.table')
+    </div>
 
     <script>
         let searchTimer;
@@ -87,8 +51,19 @@
             clearTimeout(searchTimer);
 
             searchTimer = setTimeout(() => {
-                this.form.submit();
-            }, 500);
+                const form = this.closest('form');
+                const params = new URLSearchParams(new FormData(form));
+
+                fetch(`/issues?${params.toString()}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('issues-table').innerHTML = html;
+                    });
+            }, 400);
         });
     </script>
 

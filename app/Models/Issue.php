@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 
 class Issue extends Model
 {
@@ -17,6 +18,12 @@ class Issue extends Model
         'priority',
         'due_date',
     ];
+
+    // issue can be assigned to multiple users
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
 
     public function project()
     {

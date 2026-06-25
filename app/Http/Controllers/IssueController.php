@@ -7,13 +7,14 @@ use App\Http\Requests\UpdateIssueRequest;
 use App\Models\Issue;
 use App\Models\Project;
 use App\Models\Tag;
+use App\Models\User;
 
 
 class IssueController extends Controller
 {
     public function index()
     {
-        $query = Issue::with(['project', 'tags']);
+        $query = Issue::with(['project', 'tags', 'users']);
 
         // Filter by status
         if (request('status')) {
@@ -43,6 +44,11 @@ class IssueController extends Controller
         $issues = $query->latest()->get();
         $tags = Tag::all();
 
+        // Return only the table for AJAX requests.
+        if (request()->ajax()) {
+            return view('issues.table', compact('issues'))->render();
+        }
+
         return view('issues.index', compact('issues', 'tags'));
     }
 
@@ -50,8 +56,9 @@ class IssueController extends Controller
     {
         $projects = Project::all();
         $tags = Tag::all();
+        $users = User::all();
 
-        return view('issues.create', compact('projects', 'tags'));
+        return view('issues.create', compact('projects', 'tags', 'users'));
     }
 
     public function store(StoreIssueRequest $request)
@@ -62,6 +69,9 @@ class IssueController extends Controller
 
         $issue->tags()->sync($data['tags'] ?? []);
 
+        // assign selected users
+        $issue->users()->sync($data['users'] ?? []);
+
         return redirect()->route('issues.index')
             ->with('success', 'Issue created successfully.');
     }
@@ -71,20 +81,23 @@ class IssueController extends Controller
         $issue->load([
             'project',
             'tags',
-            'comments'
+            'comments',
+            'users',
         ]);
 
         $tags = Tag::all();
+        $users = User::all();
 
-        return view('issues.show', compact('issue', 'tags'));
+        return view('issues.show', compact('issue', 'tags', 'users'));
     }
 
     public function edit(Issue $issue)
     {
         $projects = Project::all();
-        $tags = Tag::all();
+        $tags = Tag::all(); // load tags
+        $users = User::all(); // load available users
 
-        return view('issues.edit', compact('issue', 'projects', 'tags'));
+        return view('issues.edit', compact('issue', 'projects', 'tags', 'users'));
     }
 
     public function update(UpdateIssueRequest $request, Issue $issue)
@@ -94,6 +107,9 @@ class IssueController extends Controller
         $issue->update($data);
 
         $issue->tags()->sync($data['tags'] ?? []);
+
+        // update assigned users
+        $issue->users()->sync($data['users'] ?? []);
 
         return redirect()->route('issues.index')
             ->with('success', 'Issue updated successfully.');

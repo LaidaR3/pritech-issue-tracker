@@ -8,7 +8,7 @@
             <p class="muted">Issue details, tags and comments</p>
         </div>
 
-        <a href="{{ route('projects.index') }}" class="btn btn-light">
+        <a href="{{ route('issues.index') }}" class="btn btn-light">
             Back to Issues
         </a>
     </div>
@@ -137,12 +137,12 @@
                     commentBox.className = 'comment-card';
 
                     commentBox.innerHTML = `
-                                <strong>${data.comment.author_name}</strong>
-                                <p>${data.comment.body}</p>
-                                <button class="btn danger delete-comment" data-comment-id="${data.comment.id}">
-                                    Delete
-                                </button>
-                            `;
+                                    <strong>${data.comment.author_name}</strong>
+                                    <p>${data.comment.body}</p>
+                                    <button class="btn danger delete-comment" data-comment-id="${data.comment.id}">
+                                        Delete
+                                    </button>
+                                `;
 
                     commentsList.prepend(commentBox);
                     form.reset();

@@ -14,9 +14,7 @@ class StoreIssueRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
+
     public function rules(): array
     {
         return [
@@ -26,8 +24,12 @@ class StoreIssueRequest extends FormRequest
             'status' => ['required'],
             'priority' => ['required'],
             'due_date' => ['nullable', 'date'],
+
             'tags' => ['nullable', 'array'],
             'tags.*' => ['exists:tags,id'],
+
+            'users' => ['nullable', 'array'],
+            'users.*' => ['exists:users,id'],
         ];
     }
 }
